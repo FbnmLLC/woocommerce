@@ -8,26 +8,26 @@
  * Version: 1.0
  **/
 
-add_action( 'plugins_loaded', 'woocommerce__123pay_init', 0 );
+add_action( 'plugins_loaded', 'woocommerce_ir123pay_init', 0 );
 
-function woocommerce__123pay_init() {
+function woocommerce_ir123pay_init() {
 	if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
 		return;
 	}
 	if ( isset( $_GET['msg'] ) ) {
-		add_action( 'the_content', 'showMessage_123pay' );
+		add_action( 'the_content', 'showMessageir123pay' );
 	}
 
-	function showMessage_123pay( $content ) {
+	function showMessageir123pay( $content ) {
 		return '<div class="box ' . htmlentities( $_GET['type'] ) . '-box">' . base64_decode( $_GET['msg'] ) . '</div>' . $content;
 	}
 
-	class WC__123pay extends WC_Payment_Gateway {
+	class WC_ir123pay extends WC_Payment_Gateway {
 		protected $msg = array();
 
 		public function __construct() {
-			$this->id           = '_123pay';
-			$this->method_title = __( 'سامانه پرداخت یک دو سه پی', '_123pay' );
+			$this->id           = 'ir123pay';
+			$this->method_title = __( 'سامانه پرداخت یک دو سه پی', 'ir123pay' );
 			$this->has_fields   = false;
 			$this->init_form_fields();
 			$this->init_settings();
@@ -38,8 +38,8 @@ function woocommerce__123pay_init() {
 			$this->redirect_page_id = $this->settings['redirect_page_id'];
 			$this->msg['message']   = "";
 			$this->msg['class']     = "";
-			add_action( 'woocommerce_api_wc__123pay', array( $this, 'check__123pay_response' ) );
-			add_action( 'valid-_123pay-request', array( $this, 'successful_request' ) );
+			add_action( 'woocommerce_api_wc_ir123pay', array( $this, 'check_ir123pay_response' ) );
+			add_action( 'valid-ir123pay-request', array( $this, 'successful_request' ) );
 			if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ) {
 				add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
 					$this,
@@ -48,33 +48,33 @@ function woocommerce__123pay_init() {
 			} else {
 				add_action( 'woocommerce_update_options_payment_gateways', array( $this, 'process_admin_options' ) );
 			}
-			add_action( 'woocommerce_receipt__123pay', array( $this, 'receipt_page' ) );
+			add_action( 'woocommerce_receipt_ir123pay', array( $this, 'receipt_page' ) );
 		}
 
 		public function init_form_fields() {
 			$this->form_fields = array(
 				'enabled'          => array(
-					'title'   => __( 'فعال سازی/غیر فعال سازی', '_123pay' ),
+					'title'   => __( 'فعال سازی/غیر فعال سازی', 'ir123pay' ),
 					'type'    => 'checkbox',
-					'label'   => __( 'فعال کردن سامانه پرداخت یک دو سه پی', '_123pay' ),
+					'label'   => __( 'فعال کردن سامانه پرداخت یک دو سه پی', 'ir123pay' ),
 					'default' => 'yes'
 				),
 				'title'            => array(
-					'title'       => __( 'عنوان:', '_123pay' ),
+					'title'       => __( 'عنوان:', 'ir123pay' ),
 					'type'        => 'text',
-					'description' => __( 'عنوانی که کاربر مشاهده خواهد کرد', '_123pay' ),
-					'default'     => __( 'سامانه پرداخت یک دو سه پی', '_123pay' )
+					'description' => __( 'عنوانی که کاربر مشاهده خواهد کرد', 'ir123pay' ),
+					'default'     => __( 'سامانه پرداخت یک دو سه پی', 'ir123pay' )
 				),
 				'description'      => array(
-					'title'       => __( 'توضیحات:', '_123pay' ),
+					'title'       => __( 'توضیحات:', 'ir123pay' ),
 					'type'        => 'textarea',
-					'description' => __( 'توضیحاتی در مورد درگاه پرداخت / کاربر این توضحیات را مشاهده خواهد کرد', '_123pay' ),
-					'default'     => __( '', '_123pay' )
+					'description' => __( 'توضیحاتی در مورد درگاه پرداخت / کاربر این توضحیات را مشاهده خواهد کرد', 'ir123pay' ),
+					'default'     => __( '', 'ir123pay' )
 				),
 				'merchant_id'      => array(
-					'title'       => __( 'کد پذیرندگی', '_123pay' ),
+					'title'       => __( 'کد پذیرندگی', 'ir123pay' ),
 					'type'        => 'text',
-					'description' => __( 'کد پذیرندگی دریافت شده از یک دو سه پی', '_123pay' )
+					'description' => __( 'کد پذیرندگی دریافت شده از یک دو سه پی', 'ir123pay' )
 				),
 				'vahed'            => array(
 					'title'       => __( 'واحد پولی' ),
@@ -95,7 +95,7 @@ function woocommerce__123pay_init() {
 		}
 
 		public function admin_options() {
-			echo '<h3>' . __( 'سامانه پرداخت یک دو سه پی', '_123pay' ) . '</h3>';
+			echo '<h3>' . __( 'سامانه پرداخت یک دو سه پی', 'ir123pay' ) . '</h3>';
 			echo '<p>' . __( 'سامانه پرداخت یک دو سه پی' ) . '</p>';
 			echo '<table class="form-table">';
 			$this->generate_settings_html();
@@ -109,8 +109,8 @@ function woocommerce__123pay_init() {
 		}
 
 		public function receipt_page( $order ) {
-			echo '<p>' . __( 'Connection To Payment Terminal', '_123pay' ) . '</p>';
-			echo $this->generate__123pay_form( $order );
+			echo '<p>' . __( 'Connection To Payment Terminal', 'ir123pay' ) . '</p>';
+			echo $this->generate_ir123pay_form( $order );
 		}
 
 		public function process_payment( $order_id ) {
@@ -119,7 +119,7 @@ function woocommerce__123pay_init() {
 			return array( 'result' => 'success', 'redirect' => $order->get_checkout_payment_url( true ) );
 		}
 
-		public function check__123pay_response() {
+		public function check_ir123pay_response() {
 			global $woocommerce;
 			$order_id = $woocommerce->session->zegersot;
 			$order    = new WC_Order( $order_id );
@@ -166,7 +166,7 @@ function woocommerce__123pay_init() {
 			return '<div class="box ' . $this->msg['class'] . '-box">' . $this->msg['message'] . '</div>' . $content;
 		}
 
-		public function generate__123pay_form( $order_id ) {
+		public function generate_ir123pay_form( $order_id ) {
 			global $woocommerce;
 			$order        = new WC_Order( $order_id );
 			$redirect_url = ( $this->redirect_page_id == "" || $this->redirect_page_id == 0 ) ? get_site_url() . "/" : get_permalink( $this->redirect_page_id );
@@ -226,11 +226,11 @@ function woocommerce__123pay_init() {
 		}
 	}
 
-	function woocommerce_add__123pay_gateway( $methods ) {
-		$methods[] = 'WC__123pay';
+	function woocommerce_add_ir123pay_gateway( $methods ) {
+		$methods[] = 'WC_ir123pay';
 
 		return $methods;
 	}
 
-	add_filter( 'woocommerce_payment_gateways', 'woocommerce_add__123pay_gateway' );
+	add_filter( 'woocommerce_payment_gateways', 'woocommerce_add_ir123pay_gateway' );
 }
