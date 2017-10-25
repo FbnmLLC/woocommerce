@@ -178,7 +178,7 @@ function woocommerce_ir123pay_init() {
 
 			$merchant_id  = $this->merchant_id;
 			$amount       = ( $this->vahed == 'toman' ) ? $amount * 10 : $amount;
-			$callback_url = $redirect_url;
+			$callback_url = urlencode($redirect_url);
 
 			$ch = curl_init();
 			curl_setopt( $ch, CURLOPT_URL, 'https://123pay.ir/api/v1/create/payment' );
